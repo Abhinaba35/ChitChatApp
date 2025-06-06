@@ -24,13 +24,13 @@ export const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password,salt);
 
     // profile picture links
-    const boyProfilePic = `https://avatar-placeholder.iran.liara.run/public/boy?username=${username}`;
-    const girlProfilePic = `https://avatar-placeholder.iran.liara.run/public/girl?username=${username}`;
+    const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
+    const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
     const newUser = new User({
       fullName: fullname,
       username,
-      password : hashedPassword, // ❗You should hash this with bcrypt in real apps
+      password : hashedPassword, 
       gender,
       profilePic: gender === "Male" ? boyProfilePic : girlProfilePic
     });
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
 
     const isPasswordCorrect = await bcrypt.compare(password, user?.password || "");
 
-    // Correct condition: return error ONLY if user doesn't exist or password is wrong
+    
     if (!user || !isPasswordCorrect) {
       return res.status(400).json({ error: "Invalid username or password" });
     }
@@ -83,7 +83,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    // Clear the JWT cookie
+    
     res.cookie("jwt", "", {
       httpOnly: true,
       expires: new Date(0),

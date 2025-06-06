@@ -1,46 +1,48 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.models.js";
+import { getReceiverSocketId, io } from "../socket/socket.js"; // ✅ import both
 
 export const sendMessage = async (req, res) => {
-    try {
-      const { message } = req.body;
-      const receiverId = req.params.id; // ✅ Get from URL
-      const senderId = req.user._id;
-  
-      if (!message || !receiverId) {
-        return res.status(400).json({ error: "Message and receiverId are required" });
-      }
-  
-      let conversation = await Conversation.findOne({
-        participants: { $all: [senderId, receiverId] },
-      });
-  
-      if (!conversation) {
-        conversation = await Conversation.create({
-          participants: [senderId, receiverId],
-        });
-      }
-  
-      const newMessage = new Message({
-        senderId,
-        receiverId,
-        message,
-      });
-  
-      //await newMessage.save(); // ✅ Save the message to DB
-      if(newMessage){
-      conversation.messages.push(newMessage._id); // ✅ Ensure conversation schema has "messages"
-      }
-      //await conversation.save();
-      await Promise.all([conversation.save(), newMessage.save()]);
-  
-      res.status(201).json(newMessage);
-  
-    } catch (error) {
-      console.log("Error in sendMessage controller: ", error.message);
-      res.status(500).json({ error: "Internal server error" });
-    }
- };
+	try {
+		const { message } = req.body;
+		const receiverId = req.params.id;
+		const senderId = req.user._id;
+
+		if (!message || !receiverId) {
+			return res.status(400).json({ error: "Message and receiverId are required" });
+		}
+
+		let conversation = await Conversation.findOne({
+			participants: { $all: [senderId, receiverId] },
+		});
+
+		if (!conversation) {
+			conversation = await Conversation.create({
+				participants: [senderId, receiverId],
+			});
+		}
+
+		const newMessage = new Message({
+			senderId,
+			receiverId,
+			message,
+		});
+
+		conversation.messages.push(newMessage._id);
+		await Promise.all([conversation.save(), newMessage.save()]);
+
+		// ✅ EMIT the message to recipient if online
+		const receiverSocketId = getReceiverSocketId(receiverId);
+		if (receiverSocketId) {
+			io.to(receiverSocketId).emit("newMessage", newMessage);
+		}
+
+		res.status(201).json(newMessage);
+	} catch (error) {
+		console.log("Error in sendMessage controller: ", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
 
 
 export const getMessage = async(req,res) =>{

@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import useSignup from "../../hooks/useSignup.js";
 import GenderCheckbox from "./GenderCheckbox.jsx";
-import Login from "../login/login.jsx"; 
-
+import Login from "../login/Login.jsx";
 
 const SignUp = () => {
   const [inputs, setInputs] = useState({
@@ -27,7 +26,10 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-cover bg-center text-black px-4" style={{ backgroundImage: "url('/bg.jpg')" }}>
+    <div
+      className="flex items-center justify-center min-h-screen bg-cover bg-center text-black px-4"
+      style={{ backgroundImage: "url('/bg.jpg')" }}
+    >
       <div className="w-full max-w-md bg-slate-50 bg-opacity-30 backdrop-blur-md rounded-xl shadow-lg p-8">
         <h1 className="text-3xl font-semibold text-center mb-6">
           Sign Up <span className="text-amber-600">Chit Chat</span>
@@ -43,7 +45,9 @@ const SignUp = () => {
               id="fullName"
               placeholder="John Doe"
               value={inputs.fullName}
-              onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
+              onChange={(e) =>
+                setInputs({ ...inputs, fullName: e.target.value })
+              }
               className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
@@ -58,7 +62,9 @@ const SignUp = () => {
               id="username"
               placeholder="johndoe"
               value={inputs.username}
-              onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
+              onChange={(e) =>
+                setInputs({ ...inputs, username: e.target.value })
+              }
               className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
@@ -73,7 +79,9 @@ const SignUp = () => {
               id="password"
               placeholder="Enter password"
               value={inputs.password}
-              onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
+              onChange={(e) =>
+                setInputs({ ...inputs, password: e.target.value })
+              }
               className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
@@ -88,13 +96,18 @@ const SignUp = () => {
               id="confirmPassword"
               placeholder="Confirm password"
               value={inputs.confirmPassword}
-              onChange={(e) => setInputs({ ...inputs, confirmPassword: e.target.value })}
+              onChange={(e) =>
+                setInputs({ ...inputs, confirmPassword: e.target.value })
+              }
               className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
 
-          <GenderCheckbox onCheckboxChange={handleCheckboxChange} selectedGender={inputs.gender} />
+          <GenderCheckbox
+            onCheckboxChange={handleCheckboxChange}
+            selectedGender={inputs.gender}
+          />
 
           <div className="text-sm text-gray-900">
             Already have an account?{" "}
